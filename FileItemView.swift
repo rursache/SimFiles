@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct FileItemView: View {
     let file: FileItem
     let isSelected: Bool
     let onDoubleClick: () -> Void
     let onSelectionChange: (Bool) -> Void
+    let onCopyFile: () -> Void
+    let onCutFile: () -> Void
     let onDeleteFile: () -> Void
     
     @State private var tapCount = 0
@@ -56,7 +59,10 @@ struct FileItemView: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
                 .stroke(isSelected ? Color.accentColor.opacity(0.4) : Color.clear, lineWidth: 2)
-        ).onTapGesture {
+        ).onDrag {
+            let fileURL = URL(fileURLWithPath: file.path)
+            return NSItemProvider(object: fileURL as NSURL)
+        }.onTapGesture {
             tapCount += 1
             
             timer?.invalidate()
@@ -69,7 +75,15 @@ struct FileItemView: View {
                     onDoubleClick()
                 }
             }
-            
+
+            Button("Copy") {
+                onCopyFile()
+            }
+
+            Button("Cut") {
+                onCutFile()
+            }
+
             Button("Delete") {
                 onDeleteFile()
             }

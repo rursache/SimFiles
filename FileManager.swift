@@ -34,6 +34,12 @@ class SimFilesFileManager: ObservableObject {
     private let fileManager = FileManager.default
     private var fileMonitor: FileMonitor?
     private var rootPath: String = ""
+    private let clipboardOperationPasteboardType = NSPasteboard.PasteboardType("ro.randusoft.simfiles.clipboard-operation")
+    
+    private enum ClipboardOperation: String {
+        case copy
+        case cut
+    }
     
     var isAtRoot: Bool {
         return currentPath == rootPath
@@ -155,6 +161,22 @@ class SimFilesFileManager: ObservableObject {
             }
         }
         await loadFiles(at: currentPath)
+    }
+
+    func copyToPasteboard(_ files: [FileItem]) {
+        writeFilesToPasteboard(files, operation: .copy)
+    }
+
+    func cutToPasteboard(_ files: [FileItem]) {
+        writeFilesToPasteboard(files, operation: .cut)
+    }
+
+    private func writeFilesToPasteboard(_ files: [FileItem], operation: ClipboardOperation) {
+        let urls = files.map { URL(fileURLWithPath: $0.path) as NSURL }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.writeObjects(urls)
+        pasteboard.setString(operation.rawValue, forType: clipboardOperationPasteboardType)
     }
     
     @MainActor func navigateToParent() {

@@ -29,12 +29,20 @@ struct FileGridView: View {
                         } else {
                             fileManager.selectedFile = file
                         }
+                    } onCopyFile: {
+                        fileManager.selectedFile = file
+                        fileManager.copyToPasteboard([file])
+                    } onCutFile: {
+                        fileManager.selectedFile = file
+                        fileManager.cutToPasteboard([file])
                     } onDeleteFile: {
                         fileManager.selectedFile = file
                         showingDeleteAlert.toggle()
                     }.zIndex(fileManager.selectedFile?.id == file.id ? 1 : 0)
                 }
-            }.padding(.vertical)
+            }
+            .padding(.vertical)
+            .padding(.horizontal, 16)
         }.onDrop(of: [.fileURL], isTargeted: $dragOver) { providers in
             Task {
                 var urls: [URL] = []
