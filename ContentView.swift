@@ -108,7 +108,7 @@ struct ContentView: View {
                     }
                 }
                 .padding(.leading, 16)
-                .padding(.trailing, 24)
+                .padding(.trailing, 34)
                 .padding(.vertical, 12)
                 .background(.regularMaterial, in: .rect)
                 
