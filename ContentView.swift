@@ -107,7 +107,8 @@ struct ContentView: View {
                         .disabled(fileManager.currentPath.isEmpty)
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.leading, 16)
+                .padding(.trailing, 24)
                 .padding(.vertical, 12)
                 .background(.regularMaterial, in: .rect)
                 

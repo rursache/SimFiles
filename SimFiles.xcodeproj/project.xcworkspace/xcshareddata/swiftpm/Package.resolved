@@ -1,13 +1,13 @@
 {
-  "originHash" : "50731fef1dd593442ec6f9a9d754e34ad5500b6922984a26971872589c785a36",
+  "originHash" : "05ff85f35448fa9abe80871c03053ffaab1820cdb9669f1f0e14d5dda48c7f9e",
   "pins" : [
     {
       "identity" : "filemonitor",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/aus-der-Technik/FileMonitor",
       "state" : {
-        "revision" : "ef22f1487d07fbff0a7a5f743d42611bfd03b5e8",
-        "version" : "1.2.0"
+        "revision" : "5adbe8f2383eac5148475ef84977806bbd33e8d7",
+        "version" : "1.2.1"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",
       "state" : {
-        "revision" : "9bedf1e79c7b7c34b35b74bef126f56d2400ef7f",
-        "version" : "1.4.0-beta.4"
+        "revision" : "a08b87f96b41055577721a6e397562b21ad52454",
+        "version" : "26.0.0"
       }
     }
   ],

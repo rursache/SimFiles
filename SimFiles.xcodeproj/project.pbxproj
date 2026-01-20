@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 90;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -25,14 +25,12 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		173491F22E5B435800B7727A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolder = Frameworks;
 			files = (
 				173491F12E5B435800B7727A /* SwiftUIIntrospect-Dynamic in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -55,12 +53,10 @@
 /* Begin PBXFrameworksBuildPhase section */
 		B1234567890ABCDEFFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				173491F02E5B435100B7727A /* SwiftUIIntrospect-Dynamic in Frameworks */,
 				173491F82E5B546200B7727A /* FileMonitor in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -106,8 +102,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			name = SimFiles;
 			productName = SimFiles;
 			productReference = B1234567890ABCDEFFFF /* SimFiles.app */;
@@ -121,7 +115,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2620;
+				ORGANIZATIONNAME = RanduSoft;
 				TargetAttributes = {
 					B1234567890ABCDEFE = {
 						CreatedOnToolsVersion = 15.0;
@@ -129,18 +124,17 @@
 				};
 			};
 			buildConfigurationList = B1234567890ABCDEFF8 /* Build configuration list for PBXProject "SimFiles" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 			);
 			mainGroup = B1234567890ABCDEFF6;
 			packageReferences = (
 				173491EE2E5B435100B7727A /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				173491F62E5B546200B7727A /* XCRemoteSwiftPackageReference "FileMonitor" */,
 			);
+			preferredProjectObjectVersion = 90;
 			productRefGroup = B1234567890ABCDEF00 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -153,19 +147,16 @@
 /* Begin PBXResourcesBuildPhase section */
 		B1234567890ABCDEFFD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				B1234567890ABCDEF005 /* Assets.xcassets in Resources */,
 				173491F42E5B525E00B7727A /* AppIcon.icns in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B1234567890ABCDEFFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				B1234567890ABCDEF003 /* ContentView.swift in Sources */,
 				173491EB2E5B30E400B7727A /* FileGridView.swift in Sources */,
@@ -176,12 +167,11 @@
 				B1234567890ABCDEF014 /* SystemRequirements.swift in Sources */,
 				B1234567890ABCDEF001 /* App.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		B1234567890ABCDEF09 /* Debug */ = {
+		B1234567890ABCDEF09 /* Debug configuration for PBXProject "SimFiles" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -241,12 +231,13 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		B1234567890ABCDEF0A /* Release */ = {
+		B1234567890ABCDEF0A /* Release configuration for PBXProject "SimFiles" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -299,11 +290,12 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
 		};
-		B1234567890ABCDEF0C /* Debug */ = {
+		B1234567890ABCDEF0C /* Debug configuration for PBXNativeTarget "SimFiles" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -314,6 +306,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -334,7 +327,7 @@
 			};
 			name = Debug;
 		};
-		B1234567890ABCDEF0D /* Release */ = {
+		B1234567890ABCDEF0D /* Release configuration for PBXNativeTarget "SimFiles" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -345,6 +338,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -371,19 +365,17 @@
 		B1234567890ABCDEF0B /* Build configuration list for PBXNativeTarget "SimFiles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B1234567890ABCDEF0C /* Debug */,
-				B1234567890ABCDEF0D /* Release */,
+				B1234567890ABCDEF0C /* Debug configuration for PBXNativeTarget "SimFiles" */,
+				B1234567890ABCDEF0D /* Release configuration for PBXNativeTarget "SimFiles" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		B1234567890ABCDEFF8 /* Build configuration list for PBXProject "SimFiles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B1234567890ABCDEF09 /* Debug */,
-				B1234567890ABCDEF0A /* Release */,
+				B1234567890ABCDEF09 /* Debug configuration for PBXProject "SimFiles" */,
+				B1234567890ABCDEF0A /* Release configuration for PBXProject "SimFiles" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
@@ -393,8 +385,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/siteline/swiftui-introspect";
 			requirement = {
-				kind = exactVersion;
-				version = "1.4.0-beta.4";
+				kind = upToNextMajorVersion;
+				minimumVersion = 26.0.0;
 			};
 		};
 		173491F62E5B546200B7727A /* XCRemoteSwiftPackageReference "FileMonitor" */ = {
@@ -402,7 +394,7 @@
 			repositoryURL = "https://github.com/aus-der-Technik/FileMonitor";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
+				minimumVersion = 1.2.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
