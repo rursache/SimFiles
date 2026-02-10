@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var showingErrorAlert = false
     @State private var errorMessage = ""
     @State private var showingSystemRequirementsAlert = false
+    @State private var showingOverwriteAlert = false
     
     var body: some View {
         NavigationSplitView {
@@ -184,6 +185,27 @@ struct ContentView: View {
             Button("OK") { }
         } message: {
             Text(errorMessage)
+        }.alert("Replace Existing Files", isPresented: $showingOverwriteAlert) {
+            Button("Replace", role: .destructive) {
+                Task {
+                    do {
+                        try await fileManager.executePendingOverwrite()
+                    } catch {
+                        errorMessage = "Failed to copy files: \(error.localizedDescription)"
+                        showingErrorAlert = true
+                    }
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                fileManager.cancelPendingOverwrite()
+            }
+        } message: {
+            if let pending = fileManager.pendingOverwrite {
+                let names = pending.conflictingNames.joined(separator: ", ")
+                Text("\(pending.conflictingNames.count == 1 ? "\"" + names + "\" already exists" : "The following files already exist: " + names). Do you want to replace \(pending.conflictingNames.count == 1 ? "it" : "them")?")
+            }
+        }.onChange(of: fileManager.pendingOverwrite != nil) { _, hasPending in
+            showingOverwriteAlert = hasPending
         }.alert("System Requirements", isPresented: $showingSystemRequirementsAlert) {
             Button("Check App Store") {
                 if let url = URL(string: "macappstore://itunes.apple.com/app/xcode/id497799835") {

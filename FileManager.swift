@@ -24,13 +24,25 @@ struct FileItem: Identifiable, Hashable {
     }
 }
 
+struct PendingOverwrite {
+    let conflictingNames: [String]
+    let operation: Operation
+
+    enum Operation {
+        case copyFromFinder(urls: [URL])
+        case copyInternal(files: [FileItem], destination: String)
+        case moveInternal(files: [FileItem], destination: String)
+    }
+}
+
 class SimFilesFileManager: ObservableObject {
     @Published var currentFiles: [FileItem] = []
     @Published var currentPath: String = ""
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var selectedFile: FileItem?
-    
+    @Published var pendingOverwrite: PendingOverwrite?
+
     private let fileManager = FileManager.default
     private var fileMonitor: FileMonitor?
     private var rootPath: String = ""
@@ -133,34 +145,81 @@ class SimFilesFileManager: ObservableObject {
         loadFiles(at: currentPath)
     }
     
-    func moveFiles(_ files: [FileItem], to destinationPath: String) async throws {
+    func moveFiles(_ files: [FileItem], to destinationPath: String, overwrite: Bool = false) async throws {
+        if !overwrite {
+            let conflicts = conflictingNames(for: files.map(\.name), in: destinationPath)
+            if !conflicts.isEmpty {
+                await MainActor.run {
+                    pendingOverwrite = PendingOverwrite(conflictingNames: conflicts, operation: .moveInternal(files: files, destination: destinationPath))
+                }
+                return
+            }
+        }
         for file in files {
             let destinationURL = URL(fileURLWithPath: destinationPath).appendingPathComponent(file.name)
+            if overwrite { try? fileManager.removeItem(at: destinationURL) }
             try fileManager.moveItem(atPath: file.path, toPath: destinationURL.path)
         }
         await loadFiles(at: currentPath)
     }
-    
-    func copyFiles(_ files: [FileItem], to destinationPath: String) async throws {
+
+    func copyFiles(_ files: [FileItem], to destinationPath: String, overwrite: Bool = false) async throws {
+        if !overwrite {
+            let conflicts = conflictingNames(for: files.map(\.name), in: destinationPath)
+            if !conflicts.isEmpty {
+                await MainActor.run {
+                    pendingOverwrite = PendingOverwrite(conflictingNames: conflicts, operation: .copyInternal(files: files, destination: destinationPath))
+                }
+                return
+            }
+        }
         for file in files {
             let destinationURL = URL(fileURLWithPath: destinationPath).appendingPathComponent(file.name)
+            if overwrite { try? fileManager.removeItem(at: destinationURL) }
             try fileManager.copyItem(atPath: file.path, toPath: destinationURL.path)
         }
         await loadFiles(at: currentPath)
     }
-    
-    func copyFilesFromFinder(_ urls: [URL]) async throws {
-        for url in urls {
-            let fileName = url.lastPathComponent
-            let destinationURL = URL(fileURLWithPath: currentPath).appendingPathComponent(fileName)
-            
-            if url.hasDirectoryPath {
-                try fileManager.copyItem(at: url, to: destinationURL)
-            } else {
-                try fileManager.copyItem(at: url, to: destinationURL)
+
+    func copyFilesFromFinder(_ urls: [URL], overwrite: Bool = false) async throws {
+        if !overwrite {
+            let conflicts = conflictingNames(for: urls.map(\.lastPathComponent), in: currentPath)
+            if !conflicts.isEmpty {
+                await MainActor.run {
+                    pendingOverwrite = PendingOverwrite(conflictingNames: conflicts, operation: .copyFromFinder(urls: urls))
+                }
+                return
             }
         }
+        for url in urls {
+            let destinationURL = URL(fileURLWithPath: currentPath).appendingPathComponent(url.lastPathComponent)
+            if overwrite { try? fileManager.removeItem(at: destinationURL) }
+            try fileManager.copyItem(at: url, to: destinationURL)
+        }
         await loadFiles(at: currentPath)
+    }
+
+    @MainActor
+    func executePendingOverwrite() async throws {
+        guard let pending = pendingOverwrite else { return }
+        pendingOverwrite = nil
+        switch pending.operation {
+        case .copyFromFinder(let urls):
+            try await copyFilesFromFinder(urls, overwrite: true)
+        case .copyInternal(let files, let destination):
+            try await copyFiles(files, to: destination, overwrite: true)
+        case .moveInternal(let files, let destination):
+            try await moveFiles(files, to: destination, overwrite: true)
+        }
+    }
+
+    @MainActor
+    func cancelPendingOverwrite() {
+        pendingOverwrite = nil
+    }
+
+    private func conflictingNames(for names: [String], in directoryPath: String) -> [String] {
+        names.filter { fileManager.fileExists(atPath: URL(fileURLWithPath: directoryPath).appendingPathComponent($0).path) }
     }
 
     func copyToPasteboard(_ files: [FileItem]) {
