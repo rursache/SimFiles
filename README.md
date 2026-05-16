@@ -1,64 +1,49 @@
-# SimFiles - iOS Simulator Files Manager
+# SimFiles
 
-A beautiful native macOS app that allows you to manage files in the iOS Simulator's Files app storage. Copy, move, delete, and organize files directly from your Mac.
+A native macOS app to manage files in the iOS Simulator's Files app storage, with Finder drag-and-drop, a Liquid Glass UI, breadcrumb navigation, search, and sort
+
+![SimFiles](.github/ss1.jpg)
 
 ## Features
+- **Simulator detection**: auto-discovers booted iOS simulators via `xcrun simctl`
+- **File browser**: adaptive grid with icons, sizes, and a clickable breadcrumb path
+- **Drag and drop**: drop files from Finder straight into the simulator's storage
+- **File operations**: copy, cut, paste, rename, delete, create folders, with overwrite confirmation
+- **Search and sort**: filter the current folder, sort by name, size, or date modified
+- **Liquid Glass**: native macOS 26 toolbar with glassy chips and capsules
 
-- **Simulator Detection**: Automatically detects booted iOS simulators
-- **File Browser**: Modern grid-based file browser with file icons and metadata
-- **Drag & Drop**: Drag files from Finder directly into the simulator's Files app
-- **File Operations**: Create folders, delete files, and manage simulator storage
-- **Modern UI**: Beautiful macOS design with SwiftUI
+## Install
+```bash
+brew install rursache/tap/simfiles
+```
+First launch shows a Gatekeeper warning because the build is not yet notarized. Right-click `SimFiles.app` in Finder and pick **Open**, then **Open** again in the dialog. Subsequent launches go through normally
 
 ## Requirements
+- macOS 26.0 (Tahoe) or later
+- Xcode installed (provides `xcrun simctl`)
 
-- macOS 14.0 or later
-- Xcode (for iOS Simulator)
+## How to use
+1. Start any iOS simulator from Xcode
+2. Launch SimFiles and pick a booted simulator in the sidebar
+3. Browse the grid, drag files in from Finder, or use the toolbar to create folders, sort, and search
+4. Right-click a file for copy, cut, rename, or delete
+5. Click any breadcrumb segment to jump back up the tree
 
-## How to Use
+## How it works
+1. `xcrun simctl list devices booted --json` lists booted simulators
+2. `xcrun simctl listapps <udid>` returns the apps' container map (plist)
+3. SimFiles reads `com.apple.DocumentsApp.GroupContainers["group.com.apple.FileProvider.LocalStorage"]` to locate the Files app's `File Provider Storage` folder
+4. The grid is a regular file browser over that folder, with live updates via `FileMonitor`
 
-1. **Launch iOS Simulator**: Start Xcode and run any iOS simulator
-2. **Open SimFiles app**: Launch the SimFiles app
-3. **Select Simulator**: Choose a booted simulator from the sidebar
-4. **Manage Files**: 
-   - Browse files in the simulator's Files app storage
-   - Drag files from Finder to copy them to the simulator
-   - Create new folders using the "New Folder" button
-   - Select files and delete them using the "Delete" button
-   - Double-click folders to navigate into them
-   - Use the back button to navigate to parent directories
+## Building
+Open `SimFiles.xcodeproj` in Xcode and run (⌘R)
 
-## Technical Details
-
-The app works by:
-
-1. Running `xcrun simctl listapps booted` to find running simulators
-2. Extracting the DocumentsApp (Files app) information from each simulator
-3. Finding the LocalStorage path: `GroupContainers["group.com.apple.FileProvider.LocalStorage"]`
-4. Providing a native macOS interface to manage files in that directory
-
-## Building from Source
-
-1. Open `SimFiles.xcodeproj` in Xcode
-2. Build and run (⌘+R)
-
-## File Structure
-
-```
-SimFiles/
-├── SimFilesApp.swift          # Main app entry point
-├── ContentView.swift          # Main UI with simulator selection and file browser
-├── SimulatorManager.swift     # Handles simulator detection and xcrun simctl integration
-├── FileManager.swift          # File operations (copy, delete, create folders)
-└── Assets.xcassets           # App assets and icons
-```
+Marketing version is set in target build settings; the build number auto-increments each build from `SupportiveFiles/build.xcconfig` via a script phase
 
 ## Limitations
-
-- Only works with booted iOS simulators
-- Requires the Files app to be available on the simulator
-- File operations are limited to the Files app's LocalStorage container
+- Only sees booted simulators
+- Requires the Files app to be installed on the simulator
+- Scope is the Files app's LocalStorage container; doesn't touch other app sandboxes
 
 ## License
-
-This project is provided as-is for educational and development purposes.
+MIT, see [LICENSE](LICENSE)

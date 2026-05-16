@@ -1,46 +1,28 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
+SimFiles is a native macOS SwiftUI app for managing files in the iOS Simulator's Files app storage, using `xcrun simctl` to discover booted simulators and locate the Files app `LocalStorage` container, then exposing a grid browser with Finder drag-and-drop
 
-## Project Overview
-
-SimFiles is a native macOS app (SwiftUI) for managing files in iOS Simulator's Files app storage. It detects booted simulators via `xcrun simctl`, locates the Files app's LocalStorage container, and provides a grid-based file browser with drag-and-drop from Finder.
-
-## Build Commands
-
+## Build
 ```bash
-# Build (resolve packages first on clean checkout)
 xcodebuild -project SimFiles.xcodeproj -scheme SimFiles -destination 'platform=macOS' build
-
-# Clean build
-xcodebuild -project SimFiles.xcodeproj -scheme SimFiles clean build
 ```
+No test target
 
-No test target exists.
+## Folder layout
+The four top-level folders (`App/`, `Models/`, `Managers/`, `Views/`) are `PBXFileSystemSynchronizedRootGroup` references, so any new `.swift` dropped in is auto-included in the target without a pbxproj edit
 
-## Architecture
+- `App/`: `SimFilesApp` entry, `ContentView` (state owner and all alerts)
+- `Models/`: `FileItem`, `FileSortOrder`, `FileError`, `PendingOverwrite`, `Simulator`, `SimulatorError`
+- `Managers/`: `SimFilesFileManager` (CRUD, clipboard, live watching via `FileMonitor`), `SimulatorManager` (xcrun shelling), `SystemRequirements`
+- `Views/`: `SidebarView`, `SimulatorRow`, `FileBrowserView` (detail panel and toolbar), `FileGridView`, `FileItemView`, `BreadcrumbView`
 
-The app uses SwiftUI with ObservableObject-based state management (MVVM-lite):
+## Key details
+- Platform: macOS 26.0+ (Tahoe), SwiftUI with Liquid Glass
+- Bundle ID `ro.randusoft.SimFiles`, Team `3999533L99`, sandbox disabled (needs `xcrun` and direct file access)
+- `SimFilesFileManager` is named that way to avoid colliding with `Foundation.FileManager`
+- Custom clipboard pasteboard type: `ro.randusoft.simfiles.clipboard-operation`
+- Build number is sourced from `SupportiveFiles/build.xcconfig` and auto-incremented each build by the `Increment Build Number` script phase; `MARKETING_VERSION` is in target build settings
 
-- **App.swift** — Entry point. Fixed 1024x600 non-resizable window.
-- **ContentView.swift** — NavigationSplitView with simulator sidebar + file detail area. Owns three `@StateObject` managers.
-- **SimulatorManager.swift** — Runs `xcrun simctl list devices booted --json` and `xcrun simctl listapps` to discover simulators and their Files app LocalStorage paths. Parses plist output via `PropertyListSerialization`.
-- **SimFilesFileManager.swift** (in FileManager.swift) — Named `SimFilesFileManager` to avoid Foundation collision. Handles file CRUD, clipboard (custom pasteboard type `ro.randusoft.simfiles.clipboard-operation`), and uses FileMonitor for live directory watching.
-- **SystemRequirements.swift** — Validates Xcode, Command Line Tools, and `xcrun simctl` availability at launch.
-
-UI components: **FileGridView** (LazyVGrid, 6 columns at 120pt), **FileItemView** (icon + metadata + context menu), **SimulatorRow** (simulator list entry).
-
-## Dependencies (Swift Package Manager)
-
-| Package | Purpose |
-|---------|---------|
-| [SwiftUI Introspect](https://github.com/siteline/swiftui-introspect) ≥26.0.0 | Access NSSplitViewController for sidebar customization |
-| [FileMonitor](https://github.com/aus-der-Technik/FileMonitor) ≥1.2.1 | Watch file system changes in simulator storage |
-
-## Key Details
-
-- **Platform**: macOS 14.0+ (Sonoma), Swift 5, SwiftUI
-- **Bundle ID**: `ro.randusoft.SimFiles`
-- **Sandbox**: Disabled (needs direct file system and xcrun access)
-- **Signing**: Apple Development, Team 3999533L99
-- **Data models**: `Simulator` (id, name, os, localStoragePath) and `FileItem` (name, path, isDirectory, size, dateModified, computed icon/formattedSize)
+## Dependency
+- [FileMonitor](https://github.com/aus-der-Technik/FileMonitor) ≥1.2.1 for live directory watching
