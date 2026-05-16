@@ -57,8 +57,8 @@ struct ContentView: View {
             Button("Rename") {
                 Task {
                     do {
-                        if let selectedFile = fileManager.selectedFile {
-                            try await fileManager.renameFile(selectedFile, to: renameNewName)
+                        if let target = fileManager.primarySelectedFile {
+                            try await fileManager.renameFile(target, to: renameNewName)
                         }
                         renameNewName = ""
                     } catch {
@@ -69,27 +69,30 @@ struct ContentView: View {
             }
             Button("Cancel", role: .cancel) { renameNewName = "" }
         } message: {
-            Text("Enter a new name for \"\(fileManager.selectedFile?.name ?? "")\"")
+            Text("Enter a new name for \"\(fileManager.primarySelectedFile?.name ?? "")\"")
         }
         .onChange(of: showingRenameAlert) { _, isShowing in
-            if isShowing { renameNewName = fileManager.selectedFile?.name ?? "" }
+            if isShowing { renameNewName = fileManager.primarySelectedFile?.name ?? "" }
         }
-        .alert("Delete File", isPresented: $showingDeleteAlert) {
+        .alert(fileManager.selectedFileItems.count > 1 ? "Delete Items" : "Delete File", isPresented: $showingDeleteAlert) {
             Button("Delete", role: .destructive) {
                 Task {
                     do {
-                        if let selectedFile = fileManager.selectedFile {
-                            try await fileManager.deleteFiles([selectedFile])
-                        }
+                        try await fileManager.deleteFiles(fileManager.selectedFileItems)
                     } catch {
-                        errorMessage = "Failed to delete file: \(error.localizedDescription)"
+                        errorMessage = "Failed to delete: \(error.localizedDescription)"
                         showingErrorAlert = true
                     }
                 }
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Are you sure you want to delete \"\(fileManager.selectedFile?.name ?? "")\"?")
+            let items = fileManager.selectedFileItems
+            if items.count == 1 {
+                Text("Are you sure you want to delete \"\(items[0].name)\"?")
+            } else {
+                Text("Are you sure you want to delete \(items.count) items?")
+            }
         }
         .alert("Error", isPresented: $showingErrorAlert) {
             Button("OK") { }

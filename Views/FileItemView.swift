@@ -1,17 +1,19 @@
 import SwiftUI
 import Foundation
+import AppKit
 
 struct FileItemView: View {
     let file: FileItem
     let isSelected: Bool
     let onDoubleClick: () -> Void
-    let onSelectionChange: (Bool) -> Void
+    let onClick: (NSEvent.ModifierFlags) -> Void
     let onCopyFile: () -> Void
     let onCutFile: () -> Void
     let onRenameFile: () -> Void
     let onDeleteFile: () -> Void
 
     @State private var tapCount = 0
+    @State private var pendingModifiers: NSEvent.ModifierFlags = []
     @State private var timer: Timer?
 
     var body: some View {
@@ -55,6 +57,7 @@ struct FileItemView: View {
             NSItemProvider(object: URL(fileURLWithPath: file.path) as NSURL)
         }
         .onTapGesture {
+            pendingModifiers = NSEvent.modifierFlags
             tapCount += 1
             timer?.invalidate()
             timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
@@ -73,7 +76,7 @@ struct FileItemView: View {
         }
         .onChange(of: tapCount) { _, newValue in
             if newValue == 1 {
-                onSelectionChange(true)
+                onClick(pendingModifiers)
             } else if newValue == 2 {
                 onDoubleClick()
             }

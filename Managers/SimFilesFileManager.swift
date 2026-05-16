@@ -7,8 +7,49 @@ class SimFilesFileManager: ObservableObject {
     @Published var currentPath: String = ""
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var selectedFile: FileItem?
+    @Published var selectedFiles: Set<String> = []
+    @Published var selectionAnchor: String?
     @Published var pendingOverwrite: PendingOverwrite?
+
+    var selectedFileItems: [FileItem] {
+        currentFiles.filter { selectedFiles.contains($0.path) }
+    }
+
+    var primarySelectedFile: FileItem? {
+        guard selectedFiles.count == 1, let path = selectedFiles.first else { return nil }
+        return currentFiles.first { $0.path == path }
+    }
+
+    func selectOnly(_ file: FileItem) {
+        selectedFiles = [file.path]
+        selectionAnchor = file.path
+    }
+
+    func toggleSelection(_ file: FileItem) {
+        if selectedFiles.contains(file.path) {
+            selectedFiles.remove(file.path)
+            if selectionAnchor == file.path { selectionAnchor = selectedFiles.first }
+        } else {
+            selectedFiles.insert(file.path)
+            selectionAnchor = file.path
+        }
+    }
+
+    func extendSelection(to file: FileItem, in displayedFiles: [FileItem]) {
+        guard let anchor = selectionAnchor,
+              let anchorIdx = displayedFiles.firstIndex(where: { $0.path == anchor }),
+              let targetIdx = displayedFiles.firstIndex(where: { $0.path == file.path }) else {
+            selectOnly(file)
+            return
+        }
+        let range = anchorIdx <= targetIdx ? anchorIdx...targetIdx : targetIdx...anchorIdx
+        selectedFiles = Set(displayedFiles[range].map(\.path))
+    }
+
+    func clearSelection() {
+        selectedFiles = []
+        selectionAnchor = nil
+    }
 
     private let fileManager = FileManager.default
     private var fileMonitor: FileMonitor?
@@ -46,7 +87,11 @@ class SimFilesFileManager: ObservableObject {
                 let files = try await getFiles(at: currentPath)
                 await MainActor.run {
                     self.currentFiles = files
-                    self.selectedFile = nil
+                    let surviving = Set(files.map(\.path))
+                    self.selectedFiles = self.selectedFiles.intersection(surviving)
+                    if let anchor = self.selectionAnchor, !surviving.contains(anchor) {
+                        self.selectionAnchor = self.selectedFiles.first
+                    }
                     self.isLoading = false
                 }
             } catch {
@@ -109,7 +154,7 @@ class SimFilesFileManager: ObservableObject {
         }
 
         try fileManager.moveItem(atPath: file.path, toPath: destinationURL.path)
-        selectedFile = nil
+        clearSelection()
         loadFiles(at: currentPath)
     }
 
@@ -118,7 +163,6 @@ class SimFilesFileManager: ObservableObject {
         for file in files {
             try fileManager.removeItem(atPath: file.path)
         }
-        selectedFile = nil
         loadFiles(at: currentPath)
     }
 
@@ -231,7 +275,7 @@ class SimFilesFileManager: ObservableObject {
         rootPath = ""
         currentPath = ""
         currentFiles = []
-        selectedFile = nil
+        clearSelection()
     }
 }
 

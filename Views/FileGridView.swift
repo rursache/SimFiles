@@ -10,36 +10,49 @@ struct FileGridView: View {
 
     private let columns = [GridItem(.adaptive(minimum: 120, maximum: 140), spacing: 16)]
 
+    private func targetsFor(_ file: FileItem) -> [FileItem] {
+        if fileManager.selectedFiles.contains(file.path) {
+            return fileManager.selectedFileItems
+        }
+        return [file]
+    }
+
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(files) { file in
-                    FileItemView(file: file, isSelected: fileManager.selectedFile?.id == file.id) {
+                    FileItemView(file: file, isSelected: fileManager.selectedFiles.contains(file.path)) {
                         if file.isDirectory {
                             fileManager.navigateToPath(file.path)
                         } else {
                             NSWorkspace.shared.open(URL(fileURLWithPath: file.path))
                         }
-                    } onSelectionChange: { _ in
-                        if fileManager.selectedFile?.id == file.id {
-                            fileManager.selectedFile = nil
+                    } onClick: { modifiers in
+                        if modifiers.contains(.shift) {
+                            fileManager.extendSelection(to: file, in: files)
+                        } else if modifiers.contains(.command) {
+                            fileManager.toggleSelection(file)
                         } else {
-                            fileManager.selectedFile = file
+                            if fileManager.selectedFiles == [file.path] {
+                                fileManager.clearSelection()
+                            } else {
+                                fileManager.selectOnly(file)
+                            }
                         }
                     } onCopyFile: {
-                        fileManager.selectedFile = file
-                        fileManager.copyToPasteboard([file])
+                        fileManager.copyToPasteboard(targetsFor(file))
                     } onCutFile: {
-                        fileManager.selectedFile = file
-                        fileManager.cutToPasteboard([file])
+                        fileManager.cutToPasteboard(targetsFor(file))
                     } onRenameFile: {
-                        fileManager.selectedFile = file
+                        fileManager.selectOnly(file)
                         showingRenameAlert = true
                     } onDeleteFile: {
-                        fileManager.selectedFile = file
+                        if !fileManager.selectedFiles.contains(file.path) {
+                            fileManager.selectOnly(file)
+                        }
                         showingDeleteAlert.toggle()
                     }
-                    .zIndex(fileManager.selectedFile?.id == file.id ? 1 : 0)
+                    .zIndex(fileManager.selectedFiles.contains(file.path) ? 1 : 0)
                 }
             }
             .padding(20)
