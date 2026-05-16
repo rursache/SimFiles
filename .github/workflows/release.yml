@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. v1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag and version
+        id: meta
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "zip=SimFiles-${VERSION}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Show Xcode and SDKs
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks | grep macosx || true
+
+      - name: Build SimFiles.app (Release, unsigned)
+        run: |
+          xcodebuild \
+            -project SimFiles.xcodeproj \
+            -scheme SimFiles \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package .app into a zip
+        id: pkg
+        run: |
+          APP="build/Build/Products/Release/SimFiles.app"
+          test -d "$APP" || { echo "App bundle missing at $APP"; exit 1; }
+          ZIP="${{ steps.meta.outputs.zip }}"
+          ditto -c -k --keepParent "$APP" "$ZIP"
+          SHA=$(shasum -a 256 "$ZIP" | awk '{print $1}')
+          echo "$SHA  $ZIP" > checksums.txt
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          ls -la "$ZIP" checksums.txt
+
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.tag }}
+          generate_release_notes: true
+          files: |
+            ${{ steps.meta.outputs.zip }}
+            checksums.txt
