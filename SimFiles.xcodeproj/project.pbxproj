@@ -7,18 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		173491E92E5B30D900B7727A /* FileItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491E82E5B30D900B7727A /* FileItemView.swift */; };
-		173491F92E5B600000B7727A /* BreadcrumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491FA2E5B600000B7727A /* BreadcrumbView.swift */; };
-		173491EB2E5B30E400B7727A /* FileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491EA2E5B30E400B7727A /* FileGridView.swift */; };
-		173491ED2E5B30F400B7727A /* SimulatorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491EC2E5B30F400B7727A /* SimulatorRow.swift */; };
 		173491F42E5B525E00B7727A /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 173491F32E5B525E00B7727A /* AppIcon.icns */; };
 		173491F82E5B546200B7727A /* FileMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = 173491F72E5B546200B7727A /* FileMonitor */; };
-		B1234567890ABCDEF001 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF000 /* App.swift */; };
-		B1234567890ABCDEF003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF002 /* ContentView.swift */; };
 		B1234567890ABCDEF005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF004 /* Assets.xcassets */; };
-		B1234567890ABCDEF010 /* SimulatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF009 /* SimulatorManager.swift */; };
-		B1234567890ABCDEF012 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF011 /* FileManager.swift */; };
-		B1234567890ABCDEF014 /* SystemRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF013 /* SystemRequirements.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,22 +24,36 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		173491E82E5B30D900B7727A /* FileItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemView.swift; sourceTree = "<group>"; };
-		173491FA2E5B600000B7727A /* BreadcrumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadcrumbView.swift; sourceTree = "<group>"; };
-		173491EA2E5B30E400B7727A /* FileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileGridView.swift; sourceTree = "<group>"; };
-		173491EC2E5B30F400B7727A /* SimulatorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorRow.swift; sourceTree = "<group>"; };
 		173491F32E5B525E00B7727A /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		173491F52E5B529800B7727A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E1F2 /* build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = build.xcconfig; sourceTree = "<group>"; };
-		B1234567890ABCDEF000 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		B1234567890ABCDEF002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B1234567890ABCDEF004 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B1234567890ABCDEF009 /* SimulatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorManager.swift; sourceTree = "<group>"; };
-		B1234567890ABCDEF011 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
-		B1234567890ABCDEF013 /* SystemRequirements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemRequirements.swift; sourceTree = "<group>"; };
 		B1234567890ABCDEF015 /* SimFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SimFiles.entitlements; sourceTree = "<group>"; };
 		B1234567890ABCDEFFFF /* SimFiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimFiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		17E01AF12FB86E8A000B4733 /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = App;
+			sourceTree = "<group>";
+		};
+		17E01AF52FB86E8A000B4733 /* Managers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		17E01AFC2FB86E8A000B4733 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		17E01B032FB86E8A000B4733 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B1234567890ABCDEFFC /* Frameworks */ = {
@@ -63,6 +68,8 @@
 		A1B2C3D4E5F6A7B8C9D0E1F3 /* SupportiveFiles */ = {
 			isa = PBXGroup;
 			children = (
+				B1234567890ABCDEF015 /* SimFiles.entitlements */,
+				173491F52E5B529800B7727A /* Info.plist */,
 				A1B2C3D4E5F6A7B8C9D0E1F2 /* build.xcconfig */,
 			);
 			path = SupportiveFiles;
@@ -81,17 +88,10 @@
 			children = (
 				173491F32E5B525E00B7727A /* AppIcon.icns */,
 				B1234567890ABCDEF004 /* Assets.xcassets */,
-				B1234567890ABCDEF015 /* SimFiles.entitlements */,
-				173491F52E5B529800B7727A /* Info.plist */,
-				B1234567890ABCDEF000 /* App.swift */,
-				B1234567890ABCDEF002 /* ContentView.swift */,
-				173491EA2E5B30E400B7727A /* FileGridView.swift */,
-				173491E82E5B30D900B7727A /* FileItemView.swift */,
-				173491FA2E5B600000B7727A /* BreadcrumbView.swift */,
-				B1234567890ABCDEF009 /* SimulatorManager.swift */,
-				173491EC2E5B30F400B7727A /* SimulatorRow.swift */,
-				B1234567890ABCDEF011 /* FileManager.swift */,
-				B1234567890ABCDEF013 /* SystemRequirements.swift */,
+				17E01AF12FB86E8A000B4733 /* App */,
+				17E01AF52FB86E8A000B4733 /* Managers */,
+				17E01AFC2FB86E8A000B4733 /* Models */,
+				17E01B032FB86E8A000B4733 /* Views */,
 				A1B2C3D4E5F6A7B8C9D0E1F3 /* SupportiveFiles */,
 				B1234567890ABCDEF00 /* Products */,
 			);
@@ -111,6 +111,12 @@
 				173491F22E5B435800B7727A /* Embed Frameworks */,
 			);
 			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				17E01AF12FB86E8A000B4733 /* App */,
+				17E01AF52FB86E8A000B4733 /* Managers */,
+				17E01AFC2FB86E8A000B4733 /* Models */,
+				17E01B032FB86E8A000B4733 /* Views */,
 			);
 			name = SimFiles;
 			productName = SimFiles;
@@ -188,15 +194,6 @@
 		B1234567890ABCDEFFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
-				B1234567890ABCDEF003 /* ContentView.swift in Sources */,
-				173491EB2E5B30E400B7727A /* FileGridView.swift in Sources */,
-				B1234567890ABCDEF010 /* SimulatorManager.swift in Sources */,
-				B1234567890ABCDEF012 /* FileManager.swift in Sources */,
-				173491E92E5B30D900B7727A /* FileItemView.swift in Sources */,
-				173491F92E5B600000B7727A /* BreadcrumbView.swift in Sources */,
-				173491ED2E5B30F400B7727A /* SimulatorRow.swift in Sources */,
-				B1234567890ABCDEF014 /* SystemRequirements.swift in Sources */,
-				B1234567890ABCDEF001 /* App.swift in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -332,7 +329,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = SimFiles.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SupportiveFiles/SimFiles.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -341,7 +338,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = SupportiveFiles/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SimFiles;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (C) RanduSoft";
@@ -364,7 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = SimFiles.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SupportiveFiles/SimFiles.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -373,7 +370,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = SupportiveFiles/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SimFiles;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (C) RanduSoft";

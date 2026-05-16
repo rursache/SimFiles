@@ -2,54 +2,6 @@ import Foundation
 import AppKit
 import FileMonitor
 
-struct FileItem: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let path: String
-    let isDirectory: Bool
-    let size: Int64?
-    let dateModified: Date?
-    
-    var icon: NSImage {
-        if isDirectory {
-            NSWorkspace.shared.icon(for: .folder)
-        } else {
-            NSWorkspace.shared.icon(forFile: path)
-        }
-    }
-    
-    var formattedSize: String {
-        guard let size = size, !isDirectory else { return "" }
-        return ByteCountFormatter.string(fromByteCount: size, countStyle: .file)
-    }
-}
-
-enum FileSortOrder: String, CaseIterable, Identifiable {
-    case name = "Name"
-    case size = "Size"
-    case dateModified = "Date Modified"
-
-    var id: String { rawValue }
-    var systemImage: String {
-        switch self {
-        case .name: "textformat"
-        case .size: "externaldrive"
-        case .dateModified: "calendar"
-        }
-    }
-}
-
-struct PendingOverwrite {
-    let conflictingNames: [String]
-    let operation: Operation
-
-    enum Operation {
-        case copyFromFinder(urls: [URL])
-        case copyInternal(files: [FileItem], destination: String)
-        case moveInternal(files: [FileItem], destination: String)
-    }
-}
-
 class SimFilesFileManager: ObservableObject {
     @Published var currentFiles: [FileItem] = []
     @Published var currentPath: String = ""
@@ -62,33 +14,32 @@ class SimFilesFileManager: ObservableObject {
     private var fileMonitor: FileMonitor?
     private(set) var rootPath: String = ""
     private let clipboardOperationPasteboardType = NSPasteboard.PasteboardType("ro.randusoft.simfiles.clipboard-operation")
-    
+
     private enum ClipboardOperation: String {
         case copy
         case cut
     }
-    
+
     var isAtRoot: Bool {
         return currentPath == rootPath
     }
-    
+
     @MainActor
     func loadFiles(at path: String) {
         isLoading = true
         errorMessage = nil
         currentPath = path
-        
-        // Set root path on first load
+
         if rootPath.isEmpty {
             rootPath = path
         }
-        
+
         self.reloadFilesInCurrentDir()
-        
+
         self.fileMonitor = try? FileMonitor(directory: URL(filePath: path), delegate: self)
         try? self.fileMonitor?.start()
     }
-    
+
     private func reloadFilesInCurrentDir() {
         Task {
             do {
@@ -106,51 +57,47 @@ class SimFilesFileManager: ObservableObject {
             }
         }
     }
-    
+
     private func getFiles(at path: String) async throws -> [FileItem] {
         let url = URL(fileURLWithPath: path)
-        
+
         guard fileManager.fileExists(atPath: path) else {
             throw FileError.pathNotFound
         }
-        
+
         let contents = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [
             .isDirectoryKey,
             .fileSizeKey,
             .contentModificationDateKey
         ])
-        
+
         var files: [FileItem] = []
-        
+
         for fileURL in contents.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
             let resourceValues = try fileURL.resourceValues(forKeys: [
                 .isDirectoryKey,
                 .fileSizeKey,
                 .contentModificationDateKey
             ])
-            
-            let isDirectory = resourceValues.isDirectory ?? false
-            let size = resourceValues.fileSize.map { Int64($0) }
-            let dateModified = resourceValues.contentModificationDate
-            
+
             files.append(FileItem(
                 name: fileURL.lastPathComponent,
                 path: fileURL.path,
-                isDirectory: isDirectory,
-                size: size,
-                dateModified: dateModified
+                isDirectory: resourceValues.isDirectory ?? false,
+                size: resourceValues.fileSize.map { Int64($0) },
+                dateModified: resourceValues.contentModificationDate
             ))
         }
-        
+
         return files
     }
-    
+
     func createFolder(named name: String) async throws {
         let newFolderPath = URL(fileURLWithPath: currentPath).appendingPathComponent(name).path
         try fileManager.createDirectory(atPath: newFolderPath, withIntermediateDirectories: false)
         await loadFiles(at: currentPath)
     }
-    
+
     @MainActor
     func renameFile(_ file: FileItem, to newName: String) async throws {
         let trimmedName = newName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -174,7 +121,7 @@ class SimFilesFileManager: ObservableObject {
         selectedFile = nil
         loadFiles(at: currentPath)
     }
-    
+
     func moveFiles(_ files: [FileItem], to destinationPath: String, overwrite: Bool = false) async throws {
         if !overwrite {
             let conflicts = conflictingNames(for: files.map(\.name), in: destinationPath)
@@ -267,19 +214,19 @@ class SimFilesFileManager: ObservableObject {
         pasteboard.writeObjects(urls)
         pasteboard.setString(operation.rawValue, forType: clipboardOperationPasteboardType)
     }
-    
+
     @MainActor func navigateToParent() {
         let parentPath = URL(fileURLWithPath: currentPath).deletingLastPathComponent().path
-        
+
         if parentPath != currentPath && parentPath.count >= rootPath.count && parentPath.hasPrefix(rootPath) {
             loadFiles(at: parentPath)
         }
     }
-    
+
     @MainActor func navigateToPath(_ path: String) {
         loadFiles(at: path)
     }
-    
+
     func resetRoot() {
         rootPath = ""
         currentPath = ""
@@ -291,22 +238,5 @@ class SimFilesFileManager: ObservableObject {
 extension SimFilesFileManager: FileDidChangeDelegate {
     func fileDidChanged(event: FileChange) {
         self.reloadFilesInCurrentDir()
-    }
-}
-
-enum FileError: Error, LocalizedError {
-    case pathNotFound
-    case permissionDenied
-    case operationFailed
-    
-    var errorDescription: String? {
-        switch self {
-        case .pathNotFound:
-            return "Path not found"
-        case .permissionDenied:
-            return "Permission denied"
-        case .operationFailed:
-            return "File operation failed"
-        }
     }
 }
