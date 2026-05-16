@@ -267,7 +267,7 @@ struct ContentView: View {
                         ForEach(FileSortOrder.allCases) { order in
                             Label(order.rawValue, systemImage: order.systemImage).tag(order)
                         }
-                    }
+                    }.pickerStyle(.inline)
                 } label: {
                     Image(systemName: "arrow.up.arrow.down")
                 }
