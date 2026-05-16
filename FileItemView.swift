@@ -1,10 +1,3 @@
-//
-//  FileItemView.swift
-//  SimFiles
-//
-//  Created by Radu Ursache on 24.08.2025.
-//
-
 import SwiftUI
 import Foundation
 
@@ -17,23 +10,23 @@ struct FileItemView: View {
     let onCutFile: () -> Void
     let onRenameFile: () -> Void
     let onDeleteFile: () -> Void
-    
+
     @State private var tapCount = 0
     @State private var timer: Timer?
-    
+
     var body: some View {
         VStack(spacing: 8) {
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(NSColor.controlBackgroundColor))
-                    .frame(width: 60, height: 60)
-                
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.background.secondary)
+                    .frame(width: 64, height: 64)
+
                 Image(nsImage: file.icon)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 48, height: 48)
             }
-            
+
             VStack(spacing: 2) {
                 Text(file.name)
                     .font(.system(size: 12, weight: .medium))
@@ -41,58 +34,44 @@ struct FileItemView: View {
                     .multilineTextAlignment(.center)
                     .frame(height: 32)
                     .padding(.horizontal, 4)
-                
-                Group {
-                    if file.isDirectory {
-                        Text(" ")
-                            .font(.system(size: 10))
-                            .foregroundColor(.clear)
-                    } else {
-                        Text(file.formattedSize)
-                            .font(.system(size: 10))
-                            .foregroundColor(.secondary)
-                    }
-                }.frame(height: 12)
+
+                Text(file.isDirectory ? " " : file.formattedSize)
+                    .font(.system(size: 10))
+                    .foregroundStyle(.secondary)
+                    .frame(height: 12)
             }
         }
-        .frame(width: 120, height: 120)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
-                .stroke(isSelected ? Color.accentColor.opacity(0.4) : Color.clear, lineWidth: 2)
-        ).onDrag {
-            let fileURL = URL(fileURLWithPath: file.path)
-            return NSItemProvider(object: fileURL as NSURL)
-        }.onTapGesture {
+        .frame(width: 120, height: 124)
+        .padding(.vertical, 6)
+        .background {
+            if isSelected {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.accentColor.opacity(0.18))
+                    .stroke(Color.accentColor.opacity(0.5), lineWidth: 1)
+            }
+        }
+        .contentShape(.rect(cornerRadius: 12))
+        .onDrag {
+            NSItemProvider(object: URL(fileURLWithPath: file.path) as NSURL)
+        }
+        .onTapGesture {
             tapCount += 1
-            
             timer?.invalidate()
             timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
                 tapCount = 0
             }
-        }.contextMenu {
+        }
+        .contextMenu {
             if file.isDirectory {
-                Button("Open") {
-                    onDoubleClick()
-                }
+                Button("Open", systemImage: "folder") { onDoubleClick() }
             }
-
-            Button("Copy") {
-                onCopyFile()
-            }
-
-            Button("Cut") {
-                onCutFile()
-            }
-
-            Button("Rename") {
-                onRenameFile()
-            }
-
-            Button("Delete") {
-                onDeleteFile()
-            }
-        }.onChange(of: tapCount) { _, newValue in
+            Button("Copy", systemImage: "doc.on.doc") { onCopyFile() }
+            Button("Cut", systemImage: "scissors") { onCutFile() }
+            Button("Rename", systemImage: "pencil") { onRenameFile() }
+            Divider()
+            Button("Delete", systemImage: "trash", role: .destructive) { onDeleteFile() }
+        }
+        .onChange(of: tapCount) { _, newValue in
             if newValue == 1 {
                 onSelectionChange(true)
             } else if newValue == 2 {

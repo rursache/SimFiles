@@ -1,23 +1,19 @@
-//
-//  FileGridView.swift
-//  SimFiles
-//
-//  Created by Radu Ursache on 24.08.2025.
-//
-
 import SwiftUI
 
 struct FileGridView: View {
     @ObservedObject var fileManager: SimFilesFileManager
+    let files: [FileItem]
     @Binding var showingDeleteAlert: Bool
     @Binding var showingRenameAlert: Bool
-    
+
     @State private var dragOver = false
-    
+
+    private let columns = [GridItem(.adaptive(minimum: 120, maximum: 140), spacing: 16)]
+
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(.fixed(120)), count: 6), spacing: 20) {
-                ForEach(fileManager.currentFiles) { file in
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(files) { file in
                     FileItemView(file: file, isSelected: fileManager.selectedFile?.id == file.id) {
                         if file.isDirectory {
                             fileManager.navigateToPath(file.path)
@@ -42,26 +38,33 @@ struct FileGridView: View {
                     } onDeleteFile: {
                         fileManager.selectedFile = file
                         showingDeleteAlert.toggle()
-                    }.zIndex(fileManager.selectedFile?.id == file.id ? 1 : 0)
+                    }
+                    .zIndex(fileManager.selectedFile?.id == file.id ? 1 : 0)
                 }
             }
-            .padding(.vertical)
-            .padding(.horizontal, 16)
-        }.onDrop(of: [.fileURL], isTargeted: $dragOver) { providers in
+            .padding(20)
+        }
+        .scrollContentBackground(.hidden)
+        .background(dragOver ? AnyShapeStyle(Color.accentColor.opacity(0.08)) : AnyShapeStyle(Color.clear))
+        .overlay(alignment: .top) {
+            if dragOver {
+                RoundedRectangle(cornerRadius: 0)
+                    .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 2, dash: [6]))
+                    .ignoresSafeArea()
+                    .allowsHitTesting(false)
+            }
+        }
+        .onDrop(of: [.fileURL], isTargeted: $dragOver) { providers in
             Task {
                 var urls: [URL] = []
-                
                 for provider in providers {
                     await withCheckedContinuation { continuation in
-                        _ = provider.loadObject(ofClass: URL.self) { url, error in
-                            if let url = url {
-                                urls.append(url)
-                            }
+                        _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                            if let url = url { urls.append(url) }
                             continuation.resume()
                         }
                     }
                 }
-                
                 if !urls.isEmpty {
                     do {
                         try await fileManager.copyFilesFromFinder(urls)
@@ -73,6 +76,6 @@ struct FileGridView: View {
                 }
             }
             return true
-        }.background(dragOver ? Color.accentColor.opacity(0.1) : Color.clear)
+        }
     }
 }

@@ -24,6 +24,21 @@ struct FileItem: Identifiable, Hashable {
     }
 }
 
+enum FileSortOrder: String, CaseIterable, Identifiable {
+    case name = "Name"
+    case size = "Size"
+    case dateModified = "Date Modified"
+
+    var id: String { rawValue }
+    var systemImage: String {
+        switch self {
+        case .name: "textformat"
+        case .size: "externaldrive"
+        case .dateModified: "calendar"
+        }
+    }
+}
+
 struct PendingOverwrite {
     let conflictingNames: [String]
     let operation: Operation
@@ -45,7 +60,7 @@ class SimFilesFileManager: ObservableObject {
 
     private let fileManager = FileManager.default
     private var fileMonitor: FileMonitor?
-    private var rootPath: String = ""
+    private(set) var rootPath: String = ""
     private let clipboardOperationPasteboardType = NSPasteboard.PasteboardType("ro.randusoft.simfiles.clipboard-operation")
     
     private enum ClipboardOperation: String {

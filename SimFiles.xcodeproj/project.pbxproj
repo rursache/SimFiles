@@ -8,10 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		173491E92E5B30D900B7727A /* FileItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491E82E5B30D900B7727A /* FileItemView.swift */; };
+		173491F92E5B600000B7727A /* BreadcrumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491FA2E5B600000B7727A /* BreadcrumbView.swift */; };
 		173491EB2E5B30E400B7727A /* FileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491EA2E5B30E400B7727A /* FileGridView.swift */; };
 		173491ED2E5B30F400B7727A /* SimulatorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173491EC2E5B30F400B7727A /* SimulatorRow.swift */; };
-		173491F02E5B435100B7727A /* SwiftUIIntrospect-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 173491EF2E5B435100B7727A /* SwiftUIIntrospect-Dynamic */; };
-		173491F12E5B435800B7727A /* SwiftUIIntrospect-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 173491EF2E5B435100B7727A /* SwiftUIIntrospect-Dynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		173491F42E5B525E00B7727A /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 173491F32E5B525E00B7727A /* AppIcon.icns */; };
 		173491F82E5B546200B7727A /* FileMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = 173491F72E5B546200B7727A /* FileMonitor */; };
 		B1234567890ABCDEF001 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1234567890ABCDEF000 /* App.swift */; };
@@ -28,7 +27,6 @@
 			dstPath = "";
 			dstSubfolder = Frameworks;
 			files = (
-				173491F12E5B435800B7727A /* SwiftUIIntrospect-Dynamic in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 		};
@@ -36,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		173491E82E5B30D900B7727A /* FileItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemView.swift; sourceTree = "<group>"; };
+		173491FA2E5B600000B7727A /* BreadcrumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadcrumbView.swift; sourceTree = "<group>"; };
 		173491EA2E5B30E400B7727A /* FileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileGridView.swift; sourceTree = "<group>"; };
 		173491EC2E5B30F400B7727A /* SimulatorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorRow.swift; sourceTree = "<group>"; };
 		173491F32E5B525E00B7727A /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
@@ -55,7 +54,6 @@
 		B1234567890ABCDEFFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				173491F02E5B435100B7727A /* SwiftUIIntrospect-Dynamic in Frameworks */,
 				173491F82E5B546200B7727A /* FileMonitor in Frameworks */,
 			);
 		};
@@ -89,6 +87,7 @@
 				B1234567890ABCDEF002 /* ContentView.swift */,
 				173491EA2E5B30E400B7727A /* FileGridView.swift */,
 				173491E82E5B30D900B7727A /* FileItemView.swift */,
+				173491FA2E5B600000B7727A /* BreadcrumbView.swift */,
 				B1234567890ABCDEF009 /* SimulatorManager.swift */,
 				173491EC2E5B30F400B7727A /* SimulatorRow.swift */,
 				B1234567890ABCDEF011 /* FileManager.swift */,
@@ -143,7 +142,6 @@
 			);
 			mainGroup = B1234567890ABCDEFF6;
 			packageReferences = (
-				173491EE2E5B435100B7727A /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				173491F62E5B546200B7727A /* XCRemoteSwiftPackageReference "FileMonitor" */,
 			);
 			preferredProjectObjectVersion = 100;
@@ -195,6 +193,7 @@
 				B1234567890ABCDEF010 /* SimulatorManager.swift in Sources */,
 				B1234567890ABCDEF012 /* FileManager.swift in Sources */,
 				173491E92E5B30D900B7727A /* FileItemView.swift in Sources */,
+				173491F92E5B600000B7727A /* BreadcrumbView.swift in Sources */,
 				173491ED2E5B30F400B7727A /* SimulatorRow.swift in Sources */,
 				B1234567890ABCDEF014 /* SystemRequirements.swift in Sources */,
 				B1234567890ABCDEF001 /* App.swift in Sources */,
@@ -258,7 +257,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -318,7 +317,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -337,7 +336,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -370,7 +368,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -415,14 +412,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		173491EE2E5B435100B7727A /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 26.0.1;
-			};
-		};
 		173491F62E5B546200B7727A /* XCRemoteSwiftPackageReference "FileMonitor" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aus-der-Technik/FileMonitor";
@@ -434,11 +423,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		173491EF2E5B435100B7727A /* SwiftUIIntrospect-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 173491EE2E5B435100B7727A /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
-			productName = "SwiftUIIntrospect-Dynamic";
-		};
 		173491F72E5B546200B7727A /* FileMonitor */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 173491F62E5B546200B7727A /* XCRemoteSwiftPackageReference "FileMonitor" */;
