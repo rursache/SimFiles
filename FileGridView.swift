@@ -10,6 +10,7 @@ import SwiftUI
 struct FileGridView: View {
     @ObservedObject var fileManager: SimFilesFileManager
     @Binding var showingDeleteAlert: Bool
+    @Binding var showingRenameAlert: Bool
     
     @State private var dragOver = false
     
@@ -35,6 +36,9 @@ struct FileGridView: View {
                     } onCutFile: {
                         fileManager.selectedFile = file
                         fileManager.cutToPasteboard([file])
+                    } onRenameFile: {
+                        fileManager.selectedFile = file
+                        showingRenameAlert = true
                     } onDeleteFile: {
                         fileManager.selectedFile = file
                         showingDeleteAlert.toggle()

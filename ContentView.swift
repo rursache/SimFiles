@@ -10,6 +10,8 @@ struct ContentView: View {
     @State private var showingNewFolderAlert = false
     @State private var newFolderName = ""
     @State private var showingDeleteAlert = false
+    @State private var showingRenameAlert = false
+    @State private var renameNewName = ""
     @State private var showingErrorAlert = false
     @State private var errorMessage = ""
     @State private var showingSystemRequirementsAlert = false
@@ -141,7 +143,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(40)
                 } else {
-                    FileGridView(fileManager: fileManager, showingDeleteAlert: $showingDeleteAlert)
+                    FileGridView(fileManager: fileManager, showingDeleteAlert: $showingDeleteAlert, showingRenameAlert: $showingRenameAlert)
                 }
             }
         }.introspect(.navigationSplitView, on: .macOS(.v13, .v14, .v15)) { splitView in
@@ -164,6 +166,30 @@ struct ContentView: View {
             }
             Button("Cancel", role: .cancel) {
                 newFolderName = ""
+            }
+        }.alert("Rename", isPresented: $showingRenameAlert) {
+            TextField("New name", text: $renameNewName)
+            Button("Rename") {
+                Task {
+                    do {
+                        if let selectedFile = fileManager.selectedFile {
+                            try await fileManager.renameFile(selectedFile, to: renameNewName)
+                        }
+                        renameNewName = ""
+                    } catch {
+                        errorMessage = "Failed to rename: \(error.localizedDescription)"
+                        showingErrorAlert = true
+                    }
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                renameNewName = ""
+            }
+        } message: {
+            Text("Enter a new name for \"\(fileManager.selectedFile?.name ?? "")\"")
+        }.onChange(of: showingRenameAlert) { _, isShowing in
+            if isShowing {
+                renameNewName = fileManager.selectedFile?.name ?? ""
             }
         }.alert("Delete File", isPresented: $showingDeleteAlert) {
             Button("Delete", role: .destructive) {

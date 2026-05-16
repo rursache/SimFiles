@@ -137,6 +137,21 @@ class SimFilesFileManager: ObservableObject {
     }
     
     @MainActor
+    func renameFile(_ file: FileItem, to newName: String) async throws {
+        let trimmedName = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty, trimmedName != file.name else { return }
+
+        let destinationURL = URL(fileURLWithPath: file.path).deletingLastPathComponent().appendingPathComponent(trimmedName)
+        guard !fileManager.fileExists(atPath: destinationURL.path) else {
+            throw FileError.operationFailed
+        }
+
+        try fileManager.moveItem(atPath: file.path, toPath: destinationURL.path)
+        selectedFile = nil
+        loadFiles(at: currentPath)
+    }
+
+    @MainActor
     func deleteFiles(_ files: [FileItem]) async throws {
         for file in files {
             try fileManager.removeItem(atPath: file.path)

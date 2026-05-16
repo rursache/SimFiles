@@ -15,6 +15,7 @@ struct FileItemView: View {
     let onSelectionChange: (Bool) -> Void
     let onCopyFile: () -> Void
     let onCutFile: () -> Void
+    let onRenameFile: () -> Void
     let onDeleteFile: () -> Void
     
     @State private var tapCount = 0
@@ -82,6 +83,10 @@ struct FileItemView: View {
 
             Button("Cut") {
                 onCutFile()
+            }
+
+            Button("Rename") {
+                onRenameFile()
             }
 
             Button("Delete") {

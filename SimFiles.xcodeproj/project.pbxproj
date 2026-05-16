@@ -48,6 +48,7 @@
 		B1234567890ABCDEF013 /* SystemRequirements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemRequirements.swift; sourceTree = "<group>"; };
 		B1234567890ABCDEF015 /* SimFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SimFiles.entitlements; sourceTree = "<group>"; };
 		B1234567890ABCDEFFFF /* SimFiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimFiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = build.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +86,16 @@
 				B1234567890ABCDEF011 /* FileManager.swift */,
 				B1234567890ABCDEF013 /* SystemRequirements.swift */,
 				B1234567890ABCDEF00 /* Products */,
+				A1B2C3D4E5F6A7B8C9D0E1F3 /* SupportiveFiles */,
 			);
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6A7B8C9D0E1F3 /* SupportiveFiles */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* build.xcconfig */,
+			);
+			path = SupportiveFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,6 +105,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1234567890ABCDEF0B /* Build configuration list for PBXNativeTarget "SimFiles" */;
 			buildPhases = (
+				A1B2C3D4E5F6A7B8C9D0E1F4 /* Increment Build Number */,
 				B1234567890ABCDEFFB /* Sources */,
 				B1234567890ABCDEFFC /* Frameworks */,
 				B1234567890ABCDEFFD /* Resources */,
@@ -154,6 +165,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A1B2C3D4E5F6A7B8C9D0E1F4 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "XCCONFIG=\"${SRCROOT}/SupportiveFiles/build.xcconfig\"\nif [ ! -f \"$XCCONFIG\" ]; then\n    echo \"CURRENT_PROJECT_VERSION = 1\" > \"$XCCONFIG\"\nfi\nBUILD_NUMBER=$(grep 'CURRENT_PROJECT_VERSION' \"$XCCONFIG\" | sed 's/[^0-9]//g')\nBUILD_NUMBER=$((BUILD_NUMBER + 1))\necho \"CURRENT_PROJECT_VERSION = ${BUILD_NUMBER}\" > \"$XCCONFIG\"\necho \"Build number: ${BUILD_NUMBER}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B1234567890ABCDEFFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -210,7 +243,7 @@
 				DEVELOPMENT_TEAM = 3999533L99;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -276,7 +309,7 @@
 				DEVELOPMENT_TEAM = 3999533L99;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -297,6 +330,7 @@
 		};
 		B1234567890ABCDEF0C /* Debug configuration for PBXNativeTarget "SimFiles" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F6A7B8C9D0E1F2 /* build.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -329,6 +363,7 @@
 		};
 		B1234567890ABCDEF0D /* Release configuration for PBXNativeTarget "SimFiles" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F6A7B8C9D0E1F2 /* build.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
