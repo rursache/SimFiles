@@ -33,8 +33,9 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "zip=SimFiles-${VERSION}.zip" >> "$GITHUB_OUTPUT"
 
-      - name: Show Xcode and SDKs
+      - name: Select Xcode 26.4
         run: |
+          sudo xcode-select -s /Applications/Xcode_26.4.app/Contents/Developer
           xcodebuild -version
           xcodebuild -showsdks | grep macosx || true
 
