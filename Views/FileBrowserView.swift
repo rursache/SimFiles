@@ -25,11 +25,7 @@ struct FileBrowserView: View {
                     Text("Choose a booted iOS simulator from the sidebar to browse its Files app storage.")
                 }
             } else if fileManager.currentFiles.isEmpty {
-                ContentUnavailableView {
-                    Label("Empty Folder", systemImage: "tray")
-                } description: {
-                    Text("Drag files here from Finder to add them.")
-                }
+                EmptyFolderDropView(fileManager: fileManager)
             } else if filteredAndSortedFiles.isEmpty {
                 ContentUnavailableView.search(text: searchText)
             } else {
