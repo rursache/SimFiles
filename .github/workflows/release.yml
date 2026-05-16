@@ -73,3 +73,20 @@ jobs:
           files: |
             ${{ steps.meta.outputs.zip }}
             checksums.txt
+
+      - name: Trigger Homebrew tap update
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.TAP_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'rursache',
+              repo: 'homebrew-tap',
+              workflow_id: 'update-formula.yml',
+              ref: 'master',
+              inputs: {
+                formula: 'simfiles',
+                tag: '${{ steps.meta.outputs.tag }}',
+                repository: context.repo.owner + '/' + context.repo.repo
+              }
+            })
