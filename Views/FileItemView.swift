@@ -53,9 +53,7 @@ struct FileItemView: View {
             }
         }
         .contentShape(.rect(cornerRadius: 12))
-        .onDrag {
-            NSItemProvider(object: URL(fileURLWithPath: file.path) as NSURL)
-        }
+        .draggable(containerItemID: file.id)
         .onTapGesture {
             pendingModifiers = NSEvent.modifierFlags
             tapCount += 1

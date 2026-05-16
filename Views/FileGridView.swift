@@ -58,6 +58,10 @@ struct FileGridView: View {
             .padding(20)
         }
         .scrollContentBackground(.hidden)
+        .dragContainer(for: FileItem.self) { ids in
+            files.filter { ids.contains($0.id) }
+        }
+        .dragContainerSelection(Array(fileManager.selectedFiles))
         .background(dragOver ? AnyShapeStyle(Color.accentColor.opacity(0.08)) : AnyShapeStyle(Color.clear))
         .overlay(alignment: .top) {
             if dragOver {
