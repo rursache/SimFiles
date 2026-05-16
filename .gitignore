@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+.sync-conflict-*
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.xcarchive
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.pins
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Logs
+*.log
+
+# Claude Code local settings
+.claude/
